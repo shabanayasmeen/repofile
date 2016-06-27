@@ -1,0 +1,91 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+    <form-beans>
+
+    	<form-bean name="CustomerSearchForm" type="struts.example.search.CustomerSearchForm" />
+
+        <form-bean name="ManageCustomersForm" type="struts.example.search.ManageCustomersForm" />
+
+        <form-bean name="CustomerForm" type="struts.example.CustomerForm" />
+    	
+	</form-beans>
+
+	<global-exceptions>
+	
+		<exception  key="error.database.customer.save"
+					type="struts.example.customer.CustomerServiceException"
+					path="/DatabaseError.jsp" />
+
+		<exception  key="error.database.fetch.customersummary"
+					type="struts.example.customer.list.CustomerListServiceException"
+					path="/DatabaseError.jsp" />
+	
+	</global-exceptions>
+
+	
+    <global-forwards>
+    
+        <forward name="mainpage" path="/index.jsp" />
+
+    </global-forwards>
+
+    <action-mappings>
+
+		<action path="/showCustomerSearchForm" 
+				parameter="/CustomerSearchList.jsp" 
+				type="org.apache.struts.actions.ForwardAction" />
+	
+	    <action path="/submitCustomerSearchForm" 
+	    		type="struts.example.search.CustomerSearchAction"
+				name="CustomerSearchForm" 
+	        	scope="session" 
+	        	validate="true" 
+	        	input="/CustomerSearchList.jsp">
+			<forward name="success" path="/CustomerSearchList.jsp" />
+		</action>
+	
+		<action path="/manageCustomerList"
+	    		type="struts.example.search.ManageCustomersAction" 
+	        	name="ManageCustomersForm" 
+	        	scope="request" 
+	        	validate="true" 
+	        	input="/CustomerForm.jsp">
+           <forward name="deleteSuccess" path="/submitCustomerSearchForm.do" /> <!-- Action Chaining -->
+           <forward name="add" path="/showCustomerForm.do?action=Create" /> <!-- Action Chaining with multiple entry points -->
+        </action>
+
+		<action path="/showCustomerForm" 
+	    		type="struts.example.ShowCustomerAction" 
+	    		parameter="action"
+	    		scope="request">
+	        <forward name="customerFormPage" path="/CustomerForm.jsp" />
+	    </action>
+				
+	    <action path="/submitCustomerForm" 
+	    		type="struts.example.CustomerAction" 
+	    		name="CustomerForm" 
+	    		scope="request" 
+	    		validate="true" 
+	    		input="/CustomerForm.jsp">
+
+			<exception  key="error.database.customer.duplicate"
+						type="struts.example.customer.dao.DuplicateCustomerException" 
+						handler="struts.example.DuplicateCustomerExceptionHandler"/>
+
+	        <forward name="gotoSearchPage" path="/submitCustomerSearchForm.do" />
+	    </action>
+	
+		<action path="/customerlist" 
+				parameter="/CustomerSearchList.jsp" 
+				type="org.apache.struts.actions.ForwardAction" />
+
+	</action-mappings>
+
+    <controller processorClass="org.apache.struts.action.RequestProcessor" />
+
+    <message-resources parameter="struts.example.MessageResources" null="false" />
+
+    <message-resources parameter="struts.example.ImageResources" key="bundle.image" null="false" />
+    
+</struts-config>

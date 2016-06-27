@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/commons-collections.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/commons-digester.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/commons-lang.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/commons-resources.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/commons-validator.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/jakarta-oro.jar"/>
+	<classpathentry kind="lib" path="C:/struts-training/lib/struts.jar"/>
+	<classpathentry kind="var" path="WEBLOGIC_LIB"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

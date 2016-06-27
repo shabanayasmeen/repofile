@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- ================================================================ -->
+<!-- This Ant build script assumes the following directory structure. -->
+<!-- ================================================================ -->
+<!--
+       src
+       |
+       |\-java
+       |
+        \-web
+          |
+          |\-jsps go here
+          |
+           \-WEB-INF
+             |
+              \-web.xml and other xmls go here
+
+     At the end of the build, the war is created and hot deployed in weblogic
+-->
+
+<project name="exercise07" basedir="../" default="all">
+
+
+    <!-- ================================================================ -->
+    <!--                    Local system paths                            -->
+    <!-- ================================================================ -->
+    <property environment="env"/>
+    <property file="build.properties"/>
+    <property file="${user.home}/build.properties"/>
+    <property file="environment.properties"/>
+
+
+    <!-- ================================================================ -->
+    <!--   Name of project &context. When deployed, this application      -->
+    <!--   will become accessible at http://localhost:7001/{context.name} -->
+    <!-- ================================================================ -->
+    <property name="project.name" value="exercise07"/>
+    <property name="context.name" value="${project.name}"/>
+
+
+    <!-- ================================================================ -->
+    <!--                 Directories for source and build                 -->
+    <!-- ================================================================ -->
+    <property name="src.dir" value="${basedir}/${project.name}/src/java"/>
+    <property name="src.web.dir" value="${basedir}/${project.name}/src/web"/>
+    <property name="src.webinf.dir" value="${src.web.dir}/WEB-INF"/>
+    <property name="build.dir" value="${basedir}/${project.name}/build"/>
+    <property name="build.web.dir" value="${build.dir}/web"/>
+    <property name="build.webinf.dir" value="${build.dir}/WEB-INF"/>
+
+
+    <!-- ================================================================ -->
+    <!--         Temporary directory for EAR, WAR, JAR files              -->
+    <!-- ================================================================ -->
+    <property name="build.deploy.dir" value="${build.dir}/deploy"/>
+
+    <!-- ================================================================ -->
+    <!--     Directory in Weblogic tree for hot-deployment of wars        -->
+    <!-- ================================================================ -->
+    <property name="deploy.dir" value="${deploy.domain}/applications"/>
+
+
+    <!-- ============================================================== -->
+    <!--                 Application targets                            -->
+    <!-- ============================================================== -->
+
+    <target name="clean" description="Clean project directory of generated files">
+    	<delete dir="${build.dir}"/>
+    </target>
+
+    <!-- Create war file with servlets, JSPs, HTML pages, images, etc. -->
+    <target name="war" depends="clean" description="Generate packaged WAR file">
+
+        <mkdir dir="${build.deploy.dir}"/>
+        <mkdir dir="${build.web.dir}"/>
+		<mkdir dir="${build.web.dir}/css"/>
+		<mkdir dir="${build.web.dir}/images"/>
+        <mkdir dir="${build.webinf.dir}"/>
+        <mkdir dir="${build.webinf.dir}/lib"/>
+		<mkdir dir="${build.webinf.dir}/classes"/>
+
+        <!-- Copy jar files from struts-training folder -->
+        <copy todir="${build.webinf.dir}/lib">
+            <fileset dir="${basedir}/lib">
+                <include name="commons-beanutils.jar"/>
+                <include name="commons-collections.jar"/>
+                <include name="commons-digester.jar"/>
+                <include name="commons-fileupload.jar"/>
+                <include name="commons-lang.jar"/>
+                <include name="commons-logging.jar"/>
+                <include name="commons-resources.jar"/>
+                <include name="commons-validator.jar"/>
+                <include name="jakarta-oro.jar"/>
+                <include name="struts.jar"/>
+            </fileset>
+            <fileset dir="${basedir}/lib-jstl">
+            	<include name="**"/>
+            </fileset>
+            <fileset dir="${basedir}/lib-other">
+            	<include name="**"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy class files -->
+        <copy todir="${build.webinf.dir}/classes">
+            <fileset dir="${project.name}/classes">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy JSP files -->
+        <copy todir="${build.web.dir}">
+            <fileset dir="${src.web.dir}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy deployment descriptors and Struts xmls -->
+        <copy todir="${build.webinf.dir}">
+            <fileset dir="${src.webinf.dir}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy CSS from shared artifacts-->
+        <copy todir="${build.web.dir}/css">
+            <fileset dir="${basedir}/shared-artifacts/css">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy images from shared artifacts-->
+        <copy todir="${build.web.dir}/images">
+            <fileset dir="${basedir}/shared-artifacts/images">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <!-- Copy tlds from shared artifacts-->
+        <copy todir="${build.webinf.dir}">
+            <fileset dir="${basedir}/shared-artifacts/tlds">
+                <include name="**"/>
+            </fileset>
+            <fileset dir="${basedir}/shared-artifacts/tlds-jstl">
+                <include name="**"/>
+            </fileset>
+            <fileset dir="${basedir}/shared-artifacts/tlds-other">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <!-- Create war file by bundling all elements together -->
+        <war    warfile="${build.deploy.dir}/${context.name}.war"
+                webxml="${build.webinf.dir}/web.xml">
+            <webinf dir="${build.webinf.dir}">
+                <include name="**"/>
+                <exclude name="web.xml"/>
+            </webinf>
+            <fileset dir="${build.web.dir}">
+                <include name="*.jsp"/>
+                <include name="css/*.css"/>
+				<include name="images/*.gif"/>
+				<include name="images/*.jpg"/>
+            </fileset>
+        </war>
+    </target>
+
+    <!-- Deploy the WAR file to WebLogic -->
+    <target name="deploy" depends="war" description="Deploy application to WebLogic">
+        <copy file="${build.deploy.dir}/${context.name}.war"
+              todir="${deploy.dir}"/>
+    </target>
+
+  <target name="compile" description="compile" >
+    <mkdir dir="${project.name}/classes"/>
+    <javac srcdir="${src.dir}" destdir="${project.name}/classes"/>
+  </target>
+
+
+    <!-- Build project and create distribution-->
+    <target name="all" depends="clean, compile, war,deploy"/>
+
+</project>
