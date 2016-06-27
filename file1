@@ -1,0 +1,7 @@
+fatal: Not a git repository (or any of the parent directories): .gitOpen Git Bash.
+
+Change the current working directory to your local project.
+
+Initialize the local directory as a Git repository.
+Commit the files that you've staged in your local repository.
+At the top of your GitHub repository's Quick Setup page, click  to copy the remote repository URL.
