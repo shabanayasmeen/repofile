@@ -1,0 +1,23 @@
+Type a name for your repository, and an optional description.
+
+You can choose to to make the repository either public or private. Public repositories are visible to the public, while private repositories are only accessible to you, and people you share them with.
+There are a number of optional items you can pre-populate your repository with. If you're importing an existing repository to GitHub, don't choose any of these options, as you may introduce a merge conflict. You can choose to add these files from the command line late
+
+ou can create a README, which is a document describing your project.
+You can create a .gitignore file, which is a set of ignore rules.
+
+You can choose to add a software license for your project.
+
+When you're finished, click Create repository.
+
+
+
+At the bottom of the resulting Quick Setup page, under "Import code from an old repository", you can choose to import a project to your new repository. To do so, click Import code.
+git clone
+
+The git clone command copies an existing Git repository. This is sort of like svn checkout, except the “working copy” is a full-fledged Git repository—it has its own history, manages its own files, and is a completely isolated environment from the original repository.
+
+As a convenience, cloning automatically creates a remote connection called origin pointing back to the original repository. This makes it very easy to interact with a central repository.
+
+
+
